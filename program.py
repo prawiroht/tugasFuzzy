@@ -6,6 +6,7 @@ def tbRendah(x):
         return (160-x)/10
     else :
         return 1
+
 def tbSedang(x):
     if x <= 150 or x >= 180 :
         return 0
@@ -73,29 +74,57 @@ def imbGemuk(z):
     else :
         return 1
 
-def R1(x,y,z): # If x is rendah and y is ringan then z is kurus
-    return min(tbRendah(x),bbRingan(y),imbKurus(z))
+#Rule
+def R1(x,y,z): # If x is rendah and y is ringan then z is ideal
+    return min(tbRendah(x),bbRingan(y),imbIdeal(z))
 
-def R2(x,y,z): # If x is rendah and y is berat then z is gemuk
+def R2(x,y,z): # If x is rendah and y is sedang then z is gemuk
+    return min(tbRendah(x),bbSedang(y),imbGemuk(z))
+
+def R3(x,y,z): # If x is rendah and y is berat then z is gemuk
     return min(tbRendah(x),bbBerat(y),imbGemuk(z))
 
-def R3(x,y,z): # If x is tinggi and y is ringan then z is kurus
+def R4(x,y,z): # If x is sedang and y is ringan then z is kurus
+    return min(tbSedang(x),bbRingan(y),imbKurus(z))
+
+def R5(x,y,z): # If x is sedang and y is sedang then z is ideal
+    return min(tbSedang(x),bbSedang(y),imbIdeal(z))
+
+def R6(x,y,z): # If x is sedang and y is berat then z is gemuk
+    return min(tbSedang(x),bbBerat(y),imbGemuk(z))
+
+def R7(x,y,z): # If x is tinggi and y is ringan then z is kurus
     return min(tbTinggi(x),bbRingan(y),imbKurus(z))
 
-def R4(x,y,z): # If x is tinggi and y is berat then z is gemuk
-    return min(tbTinggi(x),bbBerat(y),imbGemuk(z))
-
-def R5(x,y,z): # If x is sedang and y is ringan then z is ideal
-    return min(tbSedang(x),bbRingan(y),imbIdeal(z))
-
-def R6(x,y,z): # If x is tinggi and y is sedang then z is ideal
+def R8(x,y,z): # If x is tinggi and y is sedang then z is ideal
     return min(tbTinggi(x),bbSedang(y),imbIdeal(z))
 
-tb = float(input("Masukkan tinggi badan(cm) :"))
-bb = float(input("Masukkan berat badan(kg) :"))
+def R9(x,y,z): # If x is tinggi and y is berat then z is gemuk
+    return min(tbTinggi(x),bbBerat(y),imbGemuk(z))
+    
+tb = float(input("Masukkan tinggi badan(cm) : "))
+bb = float(input("Masukkan berat badan(kg)  : "))
 
 penyebut = 0
+pembilang = 0
+
 i = 15
-while(i < 30):
-    penyebut = max(R1(tb,bb,i),R2(tb,bb,i),R3(tb,bb,i),R4(tb,bb,i),R5(tb,bb,i))*0.01
+while(i <= 30):
+    a = max(R1(tb,bb,i),R2(tb,bb,i),R3(tb,bb,i),R4(tb,bb,i),R5(tb,bb,i),R6(tb,bb,i),R7(tb,bb,i),R8(tb,bb,i),R9(tb,bb,i))
+    penyebut += a*0.01
+    pembilang += i*a*0.01
     i += 0.01
+    
+bmi = pembilang/penyebut    
+print(bmi)
+
+if bmi < 18 :
+    print("Kurus, Naikkan berat badan anda")
+elif bmi < 19:
+    print("Kurang ideal, Naikkan berat badan anda sedikit lagi")
+elif bmi < 24:
+    print("Berat badan ideal, pertahankan")
+elif bmi < 25:
+    print("Sedikit kegemukan, turunkan berat badan anda sedikit lagi")
+else:
+    print("Kegemukkan, turunkan berat badan anda")
